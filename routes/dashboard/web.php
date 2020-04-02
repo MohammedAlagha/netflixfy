@@ -8,19 +8,23 @@ Route::prefix('dashboard')->name('dashboard.')->middleware(['auth','role:super_a
 
 
 
-    //category controller
+    //category routes
     Route::resource('categories', 'CategoryController')->except('show');
     Route::get('categories-data','CategoryController@data')->name('categories.data');
 
 
-    //Role Controller
+    //Role routes
     Route::resource('roles', 'RoleController');
     Route::get('roles-data','RoleController@data')->name('roles.data');
 
 
-    //User Controller
+    //User routes
     Route::resource('users', 'UserController');
     Route::get('users-data','UserController@data')->name('users.data');
 
+    //Setting Routes
+    Route::get('/settings/social_login','SettingController@social_login')->name('settings.social_login');
+    Route::get('/settings/social_links','SettingController@social_links')->name('settings.social_links');
+    Route::post('/settings','SettingController@store')->name('settings.store');
 
 });

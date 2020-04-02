@@ -21,7 +21,12 @@
 
     <div class="row">
         <div class="col-12 mb-4">
+
+            @if (auth()->user()->hasPermission('create_categories'))
             <a href="{{route('dashboard.categories.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i>Add</a>
+            @else
+            <a href="#" disabled="" class="btn btn-primary disabled"><i class="fa fa-plus"></i>Add</a>
+            @endif
 
         </div>
     </div>
@@ -55,7 +60,7 @@
 <!-- DataTables -->
 <script src="{{asset('dashboard_files/js/jquery.datatables.min.js')}}"></script>
 <script>
-    
+
     jQuery(document).ready(function() {
     "use strict";
     var table = jQuery('#table1').DataTable({     //For making the table and I give it name to call it

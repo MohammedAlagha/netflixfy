@@ -13,12 +13,15 @@
     <link rel="stylesheet" type="text/css" href="{{asset('dashboard_files/css/main.css')}}">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    {{-- noty --}}
     <link rel="stylesheet" href="{{asset('dashboard_files/plugins/noty/noty.css')}}">
     <script src="{{asset('dashboard_files/plugins/noty/noty.min.js')}}"></script>
-    <link rel="stylesheet" href="{{asset('dashboard_files/plugins/select2/select2.min.css')}}">
-    <script src="{{asset('dashboard_files/plugins/select2/select2.min.js')}}"></script>
-    {{-- <link href="vendor/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="vendor/select2/dist/js/select2.min.js"></script> --}}
+
+    {{-- select2 --}}
+    <link rel="stylesheet" href="{{asset('dashboard_files/css/select2.min.css')}}">
+    <script src="{{asset('dashboard_files/js/plugins/select2.min.js')}}"></script>
+
     @yield('style')
 
     <style>label{font-weight: bold}</style>

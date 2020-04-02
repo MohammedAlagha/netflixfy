@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
                         @php
-                        $models=['categories','users'];
+                        $models=['categories','users','roles','movies','settings'];
                         @endphp
 
                         @foreach ($models as $index=>$model)
@@ -50,6 +50,13 @@
                                 @php
                                 $permissoin_maps=['create','read','update','delete'];
                                 @endphp
+
+                                @if ($model == 'settings')
+                                    @php
+                                    $permissoin_maps=['create','read'];
+                                    @endphp
+                                @endif
+                                
                                 <select name="permissions[]" class="form-control select2" multiple>
                                     @foreach ($permissoin_maps as $permoission_map)
                                     <option value="{{$permoission_map .'_' .$model}}">{{$permoission_map}}</option>

@@ -21,13 +21,18 @@
 
     <div class="row">
         <div class="col-12 mb-4">
-            <a href="{{route('dashboard.roles.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i>Add</a>
+
+            @if (auth()->user()->hasPermission('create_roles'))
+                <a href="{{route('dashboard.roles.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i>Add</a>
+            @else
+                 <a href="#" class="btn btn-primary disabled" disabled=""><i class="fa fa-plus"></i>Add</a>
+            @endif
 
         </div>
     </div>
 
     <div class="row">
-        <div class="col-8">
+        <div class="col-10">
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table" id="table1">
@@ -56,7 +61,6 @@
 <!-- DataTables -->
 <script src="{{asset('dashboard_files/js/jquery.datatables.min.js')}}"></script>
 <script>
-
     jQuery(document).ready(function() {
     "use strict";
     var table = jQuery('#table1').DataTable({     //For making the table and I give it name to call it

@@ -21,7 +21,12 @@
 
     <div class="row">
         <div class="col-12 mb-4">
+            @if (auth()->user()->hasPermission('create_users'))
             <a href="{{route('dashboard.users.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i>Add</a>
+
+            @else
+            <a href="#" disabled="" class="btn btn-primary disabled"><i class="fa fa-plus"></i>Add</a>
+            @endif
 
         </div>
     </div>

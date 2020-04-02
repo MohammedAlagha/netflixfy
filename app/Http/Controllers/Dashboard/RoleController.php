@@ -12,6 +12,15 @@ use DataTables;
 class RoleController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('permission:read_roles')->only(['read','show']);
+        $this->middleware('permission:create_roles')->only(['create','store']);
+        $this->middleware('permission:update_roles')->only(['edit','update']);
+        $this->middleware('permission:delete_roles')->only(['destroy']);
+    }
+
+
     public function index()
     {
         return view('dashboard.roles.index');
@@ -22,9 +31,27 @@ class RoleController extends Controller
     {
         $roles = Role::whereRoleNot('super_admin')->withCount('users')->get();
         return DataTables::of($roles)->addColumn('action',function($role){
-          return "<a class='btn btn-xs btn-primary edit' href='".route('dashboard.roles.edit',$role->id)."' data-value = '".$role->name."'><i class='fa fa-edit'></i></a>
-          <a class='btn btn-xs btn-danger delete'  data-id= '$role->id' data-url='". route('dashboard.roles.destroy',$role->id) ."'><i class='fa fa-trash'></i></a>
-          <a class='btn btn-xs btn-success show'   href='". route('dashboard.roles.show',$role->id) ."'><i class='fa fa-eye'></i></a>";
+
+            if (auth()->user()->can(['update_roles','delete_roles'],true)) {
+                return "<a class='btn btn-xs btn-primary edit' href='" . route('dashboard.roles.edit', $role->id) . "' data-value = '" . $role->name . "'><i class='fa fa-edit'></i></a>
+                <a class='btn btn-xs btn-danger delete'  data-id= '$role->id' data-url='" . route('dashboard.roles.destroy', $role->id) . "'><i class='fa fa-trash'></i></a>
+                <a class='btn btn-xs btn-success show'   href='". route('dashboard.roles.show',$role->id) ."'><i class='fa fa-eye'></i></a>";
+
+            }elseif(auth()->user()->can('update_roles')){
+                return "<a class='btn btn-xs btn-primary edit' href='" . route('dashboard.roles.edit', $role->id) . "' data-value = '" . $role->name . "'><i class='fa fa-edit'></i></a>
+                <a class='btn btn-xs btn-danger delete disabled'><i class='fa fa-trash'></i></a>
+                <a class='btn btn-xs btn-success show'   href='". route('dashboard.roles.show',$role->id) ."'><i class='fa fa-eye'></i></a>";
+            }elseif(auth()->user()->can('delete_roles')){
+                return "<a class='btn btn-xs btn-primary edit disabled' ><i class='fa fa-edit'></i></a>
+                <a class='btn btn-xs btn-danger delete'  data-id= '$role->id' data-url='" . route('dashboard.roles.destroy', $role->id) . "'><i class='fa fa-trash'></i></a>
+                <a class='btn btn-xs btn-success show'   href='". route('dashboard.roles.show',$role->id) ."'><i class='fa fa-eye'></i></a>";
+            }else {
+                return "<a class='btn btn-xs btn-primary edit disabled' ><i class='fa fa-edit'></i></a>
+                <a class='btn btn-xs btn-danger delete disabled'><i class='fa fa-trash'></i></a>
+                <a class='btn btn-xs btn-success show'   href='". route('dashboard.roles.show',$role->id) ."'><i class='fa fa-eye'></i></a>";
+            }
+
+
         })->addColumn('user_count',function($role){
             return $role->users_count;
         })->rawColumns(['action','user_count'])->make(true);

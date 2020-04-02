@@ -4,7 +4,10 @@ return [
     'role_structure' => [
         'super_admin' => [
             'users' => 'c,r,u,d',
-            'categories'=>'c,r,u,d'
+            'categories'=>'c,r,u,d',
+            'roles'=>'c,r,u,d',
+            'movies'=>'c,r,u,d',
+            'settings'=>'c,r',
         ],
         'admin' => [
 
