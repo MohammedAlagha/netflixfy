@@ -7,12 +7,12 @@
 
 @section('content')
 
-<h2>Users</h2>
+<h2>movies</h2>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{route('dashboard.welcome')}}">Home</a></li>
-        <li class="breadcrumb-item active">users</li>
+        <li class="breadcrumb-item active">movies</li>
         {{-- <li class="breadcrumb-item active" aria-current="page">Data</li> --}}
     </ol>
 </nav>
@@ -21,17 +21,18 @@
 
     <div class="row">
         <div class="col-12 mb-4">
-            @if (auth()->user()->hasPermission('create_users'))
-            <a href="{{route('dashboard.users.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i>Add</a>
+
+            @if (auth()->user()->hasPermission('create_movies'))
+                <a href="{{route('dashboard.movies.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i>Add</a>
             @else
-            <a href="#" disabled="" class="btn btn-primary disabled"><i class="fa fa-plus"></i>Add</a>
+                 <a href="#" class="btn btn-primary disabled" disabled=""><i class="fa fa-plus"></i>Add</a>
             @endif
 
         </div>
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-10">
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table" id="table1">
@@ -40,11 +41,9 @@
                             <tr>
                                 <th>id</th>
                                 <th>name</th>
-                                <th>email</th>
-                                <th>roles</th>
                                 <th>updated_at</th>
                                 <th>created_at</th>
-                                <th style="">options</th>
+                                <th style="width:28%">options</th>
                             </tr>
                         </thead>
                     </table>
@@ -61,20 +60,17 @@
 <!-- DataTables -->
 <script src="{{asset('dashboard_files/js/jquery.datatables.min.js')}}"></script>
 <script>
-
     jQuery(document).ready(function() {
     "use strict";
     var table = jQuery('#table1').DataTable({     //For making the table and I give it name to call it
               serverSide: true,
               processing: true,
               ajax: {
-                  "url": "{{route('dashboard.users.data')}}",
+                  "url": "{{route('dashboard.movies.data')}}",
               },
               columns: [
                   {data: 'id'},
                   {data: 'name'},
-                  {data: 'email'},
-                  {data: 'roles'},
                   {data: 'updated_at'},
                   {data: 'created_at'},
                   {data: 'action', orderable: false, searchable: false},
@@ -87,9 +83,13 @@
                 e.preventDefault();
                 let url = $(this).data('url');
                 let n =  new Noty({
+
                         type:'alert',
+
                         layout:'topRight',
+
                         text:"Confirm deleting record",
+
                         killer:true,
                         buttons:[
                             Noty.button('Yes','btn btn-success mr-2 mt-2', function(){

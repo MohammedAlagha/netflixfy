@@ -21,6 +21,7 @@ try {
 
 window.axios = require('axios');
 
+
 window.Noty = require('noty');
 
 
