@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\MovieRequest;
+use App\Jobs\StreamMovie;
 use App\Movie;
 use DataTables;
 
@@ -71,13 +72,25 @@ class MovieController extends Controller
            'path'=>$request->file('movie')->store('movies')
        ]);
 
+
+        //encoding the vedio.........................
+
+        $this->dispatch(new StreamMovie($movie));
+
        return $movie;
+
     }//end of store
 
 
     public function show(Movie $movie)
     {
         return view('dashboard.movies.show',compact('movie'));
+    }
+
+
+    public function processingShow(Movie $movie)
+    {
+        return $movie;
     }
 
 

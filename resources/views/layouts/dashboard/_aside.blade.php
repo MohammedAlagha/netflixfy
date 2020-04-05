@@ -20,6 +20,13 @@
 
         @endif
 
+        @if (auth()->user()->hasPermission('read_movies'))
+
+        <li><a class="app-menu__item" href="{{route('dashboard.movies.index')}}"><i
+                    class="app-menu__icon fa fa-play"></i><span class="app-menu__label">Movies</span></a></li>
+
+        @endif
+
         @if (auth()->user()->hasPermission('read_users'))
 
         <li><a class="app-menu__item" href="{{route('dashboard.users.index')}}"><i

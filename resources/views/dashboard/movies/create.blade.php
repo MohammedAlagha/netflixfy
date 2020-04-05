@@ -34,9 +34,12 @@
                 <p>Click to upload</p>
             </div>
 
-             <input type="file" name="" data-movie_id="{{$movie->id}}" data-url="{{route('dashboard.movies.store')}}" id="movie_file-input" style="display:none">
+            <input type="file" name="" data-movie_id="{{$movie->id}}" data-url="{{route('dashboard.movies.store')}}"
+                id="movie_file-input" style="display:none">
 
-            {!! Form::open(['route'=>['dashboard.movies.update',$movie->id],'method'=>'post','id'=>'movie_properties','style'=>'display:none']) !!}
+            {!!
+            Form::open(['route'=>['dashboard.movies.update',$movie->id],'method'=>'post','id'=>'movie_properties','style'=>'display:none'])
+            !!}
 
             @include('dashboard.partials._errors')
 
@@ -44,8 +47,8 @@
             <div class="form-group">
                 <label id="upload-status" for="">Uploading</label>
                 <div class="progress">
-                    <div class="progress-bar" id="upload-progress" role="progressbar"
-                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" id="upload-progress" role="progressbar" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
 
@@ -136,11 +139,32 @@
                     }
 
 
-                }).then(function(response) {
+                }).then(function(response) {  //return movie before processing
 
-                })
+                    let interval = setInterval(function() {
 
-            });//end of file input change
+                        axios({
+                            url:`/dashboard/movie/processing-show/${response.data.id}`,
+                            method:'GET'
+                        }).then(function (response) {   //movie while processing
+
+                            document.getElementById('upload-status').innerText = 'Processing';
+                            document.getElementById('upload-progress').style.width = response.data.percent + "%";
+                            document.getElementById('upload-progress').innerHTML = response.data.percent + '%';
+
+                            if (response.data.percent == 100) {
+                                clearInterval(interval);  //break interval
+                                document.getElementById('upload-status').innerText = 'Processed';
+
+                            }
+                        })
+
+
+                        },3000)
+
+                    })
+                }); //end of change event
+
 </script>
 
 @endsection

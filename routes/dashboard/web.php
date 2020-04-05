@@ -26,6 +26,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware(['auth','role:super_a
     //Movie routes
     Route::resource('movies', 'MovieController');
     Route::get('movies-data','MovieController@data')->name('movies.data');
+    Route::get('movie/processing-show/{movie}','MovieController@processingShow')->name('movies.processingShow');
 
     //Setting Routes
     Route::get('/settings/social_login','SettingController@social_login')->name('settings.social_login');
