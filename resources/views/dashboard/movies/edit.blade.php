@@ -18,67 +18,73 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tile mb-4">
-            {!! Form::open(['route'=>['dashboard.movies.update',$movie->id],'id'=>'movie_edit','method'=>'put']) !!}
-            <input type="hidden" name="id" value="{{$movie->id}}">
-            @include('dashboard.partials._errors')
+             {!! Form::open(['route'=>['dashboard.movies.update',$movie->id],'method'=>'PUT','id'=>'movie_properties','files'=>'yes']) !!}
 
-            {{-- name --}}
-            <div class="form-group">
 
-                <label for="name">Name</label>
-                <input type="text" name="name" class="form-control" value="{{old('name',$movie->name)}}">
-            </div>
+                <input type="hidden" name="id" value="{{$movie->id}}">
 
-            {{-- permission --}}
+                <input type="hidden" name="type" value="update">   {{--for choose store or update and validation --}}
 
-            <div class="form-group">
-                <h4 style="font-weight:400">Permissions</h4>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th style="width:5%">#</th>
-                            <th style="width:15%">Model</th>
-                            <th>Permissions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                        $models=['categories','users','movies','movies','settings']
-                        @endphp
+                @include('dashboard.partials._errors')
 
-                        @foreach ($models as $index=>$model)
-                        <tr>
-                            <td>{{$index + 1}}</td>
-                            <td>{{$model}}</td>
-                            <td>
-                                @php
-                                $permissoin_maps=['create','read','update','delete'];
-                                @endphp
+                {{-- name --}}
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="movie_name" class="form-control"
+                           value="{{old('name', $movie->name)}}">
+                </div>
 
-                                @if ($model == 'settings')
-                                    @php
-                                    $permissoin_maps=['create','read'];
-                                    @endphp
-                                @endif
+                {{-- description --}}
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" name="description" class="form-control"
+                           value="{{old('description', $movie->description)}}">
+                </div>
 
-                                <select name="permissions[]" class="form-control select2" multiple>
-                                    @foreach ($permissoin_maps as $permoission_map)
-                                    <option value="{{$permoission_map .'_' .$model}}"
-                                        {{($movie->hasPermission($permoission_map .'_' .$model))?'selected':''}}>
-                                        {{$permoission_map}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
+                {{-- poster --}}
+                <div class="form-group">
+                    <label for="poster">Poster</label>
+                    <input type="file" name="poster" class="form-control">
+                    <img src="{{$movie->poster_path}}" style="margin-top:10px; width:255px; height:378px" alt="poster">
+                </div>
+
+                {{-- image --}}
+                <div class="form-group">
+                    <label for="image">Image</label>
+                    <input type="file" name="image" class="form-control">
+                    <img src="{{$movie->image_path}}" style="margin-top:10px; width:300px; height:300px" alt="poster">
+
+                </div>
+
+                {{-- category --}}
+                <div class="form-group">
+                    <label for="categories">Category</label>
+                    <select name="categories[]" class="form-control select2" style="width:100%" multiple>
+                        @foreach ($categories as $category)
+                            <option value="{{$category->id}}"
+                                {{in_array($category->id,$movie->categories->pluck('id')->toArray())?"selected":""}}>
+                                {{$category->name}}</option>
                         @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i>Edit</button>
-            </div>
-            {!! Form::close() !!}
+                {{-- year --}}
+                <div class="form-group">
+                    <label for="name">Year</label>
+                    <input type="number" name="year" class="form-control" value="{{old('year', $movie->year)}}">
+                </div>
+
+                {{-- Rating --}}
+                <div class="form-group">
+                    <label for="name">Rating</label>
+                    <input type="number" min="1" name="rating" class="form-control"
+                           value="{{old('rating', $movie->rating)}}">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" id="submit-btn" class="btn btn-primary"><i class="fa fa-plus"></i>Edit</button>
+                </div>
+                 {!! Form::close() !!}
         </div>
     </div>
 </div>

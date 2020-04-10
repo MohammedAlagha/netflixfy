@@ -36,8 +36,8 @@ class UserRequest extends FormRequest
                 [
                     'name' =>'required|min:3',
                     'email' => 'required|email|unique:users,email',
-                    'password'=>'required|min:6|password|confirmed',
-                    'password_confirmation'=>'password|required|min:6',
+                    'password'=>'required|min:6|confirmed',
+                    'password_confirmation'=>'required|min:6',
                     'role_id'=>'required|numeric'
                 ];
             }

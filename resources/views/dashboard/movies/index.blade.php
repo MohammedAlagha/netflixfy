@@ -32,7 +32,7 @@
     </div>
 
     <div class="row">
-        <div class="col-10">
+        <div class="col-12">
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table" id="table1">
@@ -40,11 +40,15 @@
                         <thead>
                             <tr>
                                 <th>id</th>
-                                <th>name</th>
+                                <th style="width:20%">Name</th>
+                                <th style="width:15%" >Description</th>
+                                <th>Year</th>
+                                <th>Rating</th>
+                                <th>Categories</th>
                                 <th>updated_at</th>
                                 <th>created_at</th>
-                                <th style="width:28%">options</th>
-                            </tr>
+                                <th style="width:30%">options</th>
+                           </tr>
                         </thead>
                     </table>
                 </div><!-- table-responsive -->
@@ -71,6 +75,10 @@
               columns: [
                   {data: 'id'},
                   {data: 'name'},
+                  {data: 'description'},
+                  {data: 'year'},
+                  {data: 'rating'},
+                  {data: 'categories'},
                   {data: 'updated_at'},
                   {data: 'created_at'},
                   {data: 'action', orderable: false, searchable: false},

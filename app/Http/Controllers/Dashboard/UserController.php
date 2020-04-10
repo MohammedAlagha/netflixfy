@@ -48,7 +48,7 @@ class UserController extends Controller
         })->addColumn('roles', function ($user) {
             $result = '';
             foreach ($user->roles as $role) {
-                $result .= '<h5 style="display:inline-block"><span class="badge badge-primary ml-1">' . $role->name . '</h5>';
+                $result .= '<h5 style="display:inline-block"><span class="badge badge-primary ml-1">' . $role->name . '</span></h5>';
             };
             return $result;
         })->rawColumns(['roles', 'action'])->make(true);
@@ -63,7 +63,8 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        $request->merge(['password' => bcrypt($request->password)]);
+
+//        $request->merge(['password' => bcrypt($request->password)]);      I write method in user model instead of this line
 
         $user = User::create($request->all());
 

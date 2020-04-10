@@ -29,7 +29,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tile mb-4">
-            <div class="" id="upload">
+            <div class="" id="upload" style="display:{{$errors->any()?'none':'flex'}}">
                 <i class="fa fa-video-camera fa-2x"></i>
                 <p>Click to upload</p>
             </div>
@@ -37,61 +37,85 @@
             <input type="file" name="" data-movie_id="{{$movie->id}}" data-url="{{route('dashboard.movies.store')}}"
                 id="movie_file-input" style="display:none">
 
-            {!!
-            Form::open(['route'=>['dashboard.movies.update',$movie->id],'method'=>'post','id'=>'movie_properties','style'=>'display:none'])
-            !!}
 
-            @include('dashboard.partials._errors')
+            {{-- {!! Form::open(['route'=>['dashboard.movies.update',$movie->id],'method'=>'PUT','id'=>'movie_properties','files'=>'yes','style'=>"display:$errors->any()? 'block':'none'"]) !!} --}}
+            <form method="post" action="{{ route('dashboard.movies.update',$movie->id) }}" id="movie_properties"
+                style="display:{{$errors->any()?'block':'none'}}" enctype="multipart/form-data">
+                {{ method_field('PUT') }}
+                {{ csrf_field() }}
 
-            {{-- progress --}}
-            <div class="form-group">
-                <label id="upload-status" for="">Uploading</label>
-                <div class="progress">
-                    <div class="progress-bar" id="upload-progress" role="progressbar" aria-valuenow="25"
-                        aria-valuemin="0" aria-valuemax="100"></div>
+                <input type="hidden" name="id" value="{{$movie->id}}">
+
+                <input type="hidden" name="type" value="publish">   {{--for choose store or update and validation --}}
+
+                @include('dashboard.partials._errors')
+
+                {{-- progress bar --}}
+                <div class="form-group" style="display:{{$errors->any()?'none':'block'}}">
+                    <label id="upload-status" for="">Uploading</label>
+                    <div class="progress">
+                        <div class="progress-bar" id="upload-progress" role="progressbar" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
                 </div>
-            </div>
 
-            {{-- name --}}
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="movie_name" class="form-control" value="{{old('name')}}">
-            </div>
+                {{-- name --}}
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="movie_name" class="form-control"
+                        value="{{old('name', $movie->name)}}">
+                </div>
 
-            {{-- description --}}
-            <div class="form-group">
-                <label for="name">Description</label>
-                <input type="text" name="description" class="form-control" value="{{old('name')}}">
-            </div>
+                {{-- description --}}
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" name="description" class="form-control"
+                        value="{{old('description', $movie->description)}}">
+                </div>
 
-            {{-- poster --}}
-            <div class="form-group">
-                <label for="name">Poster</label>
-                <input type="file" name="name" class="form-control" value="{{old('name')}}">
-            </div>
+                {{-- poster --}}
+                <div class="form-group">
+                    <label for="poster">Poster</label>
+                    <input type="file" name="poster" class="form-control">
+                </div>
 
-            {{-- image --}}
-            <div class="form-group">
-                <label for="name">Image</label>
-                <input type="file" name="name" class="form-control" value="{{old('name')}}">
-            </div>
+                {{-- image --}}
+                <div class="form-group">
+                    <label for="image">Image</label>
+                    <input type="file" name="image" class="form-control">
+                </div>
 
-            {{-- year --}}
-            <div class="form-group">
-                <label for="name">Year</label>
-                <input type="number" name="name" class="form-control" value="{{old('name')}}">
-            </div>
+                {{-- category --}}
+                <div class="form-group">
+                    <label for="categories">Category</label>
+                    <select name="categories[]" class="form-control select2" style="width:100%" multiple>
+                        @foreach ($categories as $category)
+                        <option value="{{$category->id}}"
+                            {{in_array($category->id,$movie->categories->pluck('id')->toArray())?"selected":""}}>
+                            {{$category->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            {{-- Rating --}}
-            <div class="form-group">
-                <label for="name">Rating</label>
-                <input type="number" min="1" name="rating" class="form-control" value="{{old('name')}}">
-            </div>
+                {{-- year --}}
+                <div class="form-group">
+                    <label for="name">Year</label>
+                    <input type="number" name="year" class="form-control" value="{{old('year', $movie->year)}}">
+                </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i>Add</button>
-            </div>
-            {!! Form::close() !!}
+                {{-- Rating --}}
+                <div class="form-group">
+                    <label for="name">Rating</label>
+                    <input type="number" min="1" name="rating" class="form-control"
+                        value="{{old('rating', $movie->rating)}}">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" id="submit-btn" class="btn btn-primary"
+                        style="display:{{$errors->any()?'block':'none'}}"><i class="fa fa-plus"></i>Add</button>
+                </div>
+                {{-- {!! Form::close() !!} --}}
+            </form>
         </div>
     </div>
 </div>
@@ -155,6 +179,7 @@
                             if (response.data.percent == 100) {
                                 clearInterval(interval);  //break interval
                                 document.getElementById('upload-status').innerText = 'Processed';
+                                document.getElementById('submit-btn').style.display = 'block'
 
                             }
                         })

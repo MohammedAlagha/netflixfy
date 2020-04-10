@@ -41,6 +41,7 @@
                             <tr>
                                 <th>id</th>
                                 <th>name</th>
+                                <th>movies count</th>
                                 <th>updated_at</th>
                                 <th>created_at</th>
                                 <th style="width:20%">options</th>
@@ -72,6 +73,7 @@
               columns: [
                   {data: 'id'},
                   {data: 'name'},
+                  {data: 'movies_count'},
                   {data: 'updated_at'},
                   {data: 'created_at'},
                   {data: 'action', orderable: false, searchable: false},

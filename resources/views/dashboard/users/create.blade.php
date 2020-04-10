@@ -37,14 +37,14 @@
 
     <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" name="password" class="form-control" value="{{old('password')}}">
+        <input type="password" name="password" class="form-control" >
     </div>
 
     {{-- password confirmation --}}
 
     <div class="form-group">
         <label for="password_confirmation">Confirm Password</label>
-        <input type="password" name="password_confirmation" class="form-control" value="{{old('password_confirmation')}}">
+        <input type="password" name="password_confirmation" class="form-control">
     </div>
 
     {{-- role --}}

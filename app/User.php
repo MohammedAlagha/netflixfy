@@ -46,6 +46,9 @@ class User extends Authenticatable
         return ucfirst($value);
     }
 
+    public function setPasswordAttribute($value){
+        $this->attributes['password'] = bcrypt('$value');
+    }
     // scope----------------------------------------------
 
     public function scopeWhereRole($query,$role_name)

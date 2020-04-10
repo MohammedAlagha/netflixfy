@@ -23,8 +23,32 @@ class MovieRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+                   $collection = collect($this->request)->toArray();
+
+        if ($collection['type'] == 'publish') {
+
+            return [
+                'name' => 'required|min:3|unique:movies,name,' . $collection['id'],
+                'description' => 'required',
+                 'poster'=>'required|image',
+                 'image'=>'required|image',
+                'categories' => 'required|array',
+                'year' => 'required',
+                'rating' => 'required'
+            ];
+        }else{
+
+            return [
+                'name' => 'required|min:3|unique:movies,name,' . $collection['id'],
+                'description' => 'required',
+                 'poster'=>'sometimes|nullable|image',
+                 'image'=>'sometimes|nullable|image',
+                'categories' => 'required|array',
+                'year' => 'required',
+                'rating' => 'required'
+            ];
+
+        }
     }
+
 }

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\MovieRequest;
 use App\Jobs\StreamMovie;
 use App\Movie;
 use DataTables;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class MovieController extends Controller
 {
@@ -25,11 +28,11 @@ class MovieController extends Controller
     {
         return view('dashboard.movies.index');
 
-    }//end f index
+    }//end of index
 
     public function data()
     {
-        $movies = Movie::all();
+        $movies = Movie::with('categories')->get();
         return DataTables::of($movies)->addColumn('action',function($movie){
 
             if (auth()->user()->can(['update_movies','delete_movies'],true)) {
@@ -51,18 +54,25 @@ class MovieController extends Controller
                 <a class='btn btn-xs btn-success show'   href='". route('dashboard.movies.show',$movie->id) ."'><i class='fa fa-eye'></i></a>";
             }
 
-        })->rawColumns(['action','user_count'])->make(true);
+        })->addColumn('categories',function ($movie){
+            $result = '';
+            foreach ($movie->categories as $category){
+                $result .= "<h5 style='display: inline-block'><span class='badge badge-primary ml-1'>$category->name</span></h5>";
+            }
+            return $result;
+        })->rawColumns(['action','user_count','categories'])->make(true);
 
     }
 
 
     public function create()
     {
+        $categories = Category::all();
         $movie = Movie::create([]);
-        return view('dashboard.movies.create', compact('movie'));
+        return view('dashboard.movies.create', compact('movie','categories'));
     }
 
-    public function store(MovieRequest $request)
+    public function store(Request $request)
     {
 
        $movie = Movie::FindorFail($request->movie_id);
@@ -84,7 +94,8 @@ class MovieController extends Controller
 
     public function show(Movie $movie)
     {
-        return view('dashboard.movies.show',compact('movie'));
+        $categories = Category::all();
+        return view('dashboard.movies.show',compact('movie','categories'));
     }
 
 
@@ -96,17 +107,47 @@ class MovieController extends Controller
 
     public function edit(Movie $movie)
     {
-        return view('dashboard.movies.edit',compact('movie'));
+        $categories = Category::all();
+        return view('dashboard.movies.edit',compact('movie','categories'));
     }
 
 
     public function update(MovieRequest $request, Movie $movie)
     {
 
-        $movie->update($request->all());
+        $request_data = $request->except(['poster','image']);
+
+        if ($request->poster){
+
+            $this->removePrevious('poster',$movie);
+           $poster = Image::make($request->poster)->resize('255','378')->encode('jpg');
+
+            Storage::disk('local')->put('public/images/'.$request->poster->hashName(),(string)$poster,'public');
+
+//           $request->merge(['poster'=>$request->poster->hashName()]);
+            $request_data['poster']=$request->poster->hashName();
 
 
-        session()->flash('success','Edited Successfully');
+        } //end of if
+
+        if ($request->image){
+
+            $this->removePrevious('image',$movie);
+            $image = Image::make($request->image)->encode('jpg',50);
+
+            Storage::disk('local')->put('public/images/'.$request->image->hashName(),(string)$image,'public');
+
+//            $request->merge(['image'=>$request->image->hashName()]);
+
+            $request_data['image']=$request->image->hashName();
+
+        } //end of if
+
+//        dd($request_data);
+        $movie->update($request_data);
+        $movie->categories()->sync($request->categories);
+
+        session()->flash('success','Data Edited Successfully');
         return redirect()->route('dashboard.movies.index');
 
     }
@@ -114,12 +155,31 @@ class MovieController extends Controller
 
     public function destroy(Movie $movie)
     {
+        Storage::disk('local')->delete('public/images/' . $movie->poster);
+        Storage::disk('local')->delete('public/images/' . $movie->image);
+
+        Storage::disk('local')->deleteDirectory('public/movies/' . $movie->id);
+        Storage::disk('local')->delete($movie->path);
 
         $movie->delete();
         // session()->flash('success','Deleted Successfully');
         // return redirect()->route('dashboard.movies.index');
 
         return \response()->json(['status'=>true,'message'=>'Deleted Successfully']);
+    }
+
+    private function removePrevious($image_type,$movie){
+
+        if ($image_type == 'poster'){
+            if ($movie->poster != null) {
+                Storage::disk('local')->delete('public/images/' . $movie->poster);
+            }
+        }else{
+            if ($movie->image != null) {
+                Storage::disk('local')->delete('public/images/' . $movie->image);
+            }
+
+        }
 
     }
 }

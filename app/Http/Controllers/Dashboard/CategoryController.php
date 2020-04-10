@@ -26,7 +26,7 @@ class CategoryController extends Controller
 
     public function data()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('movies')->get();
         return DataTables::of($categories)->addColumn('action',function($category){
 
             if (auth()->user()->can(['update_categories','delete_categories'],true)) {
@@ -43,7 +43,9 @@ class CategoryController extends Controller
                 return "<a class='btn btn-xs btn-primary edit disabled' ><i class='fa fa-edit'></i></a>
                 <a class='btn btn-xs btn-danger delete disabled'><i class='fa fa-trash'></i></a>";
             }
-        })->make(true);
+        })->addColumn('movies_count',function($category) {
+            return $category->movies_count;
+        })->rawColumns(['action','movies_count'])->make(true);
 
     }
 
