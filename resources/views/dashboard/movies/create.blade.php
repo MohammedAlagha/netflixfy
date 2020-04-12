@@ -106,7 +106,7 @@
                 {{-- Rating --}}
                 <div class="form-group">
                     <label for="name">Rating</label>
-                    <input type="number" min="1" name="rating" class="form-control"
+                    <input type="number" min="1" max="7" name="rating" class="form-control"
                         value="{{old('rating', $movie->rating)}}">
                 </div>
 
