@@ -16,4 +16,6 @@ class WelcomeController extends Controller
 
         return view('welcome', compact('latest_movies','categories'));
     }
+
+
 }//end of controller

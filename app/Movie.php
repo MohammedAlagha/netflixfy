@@ -9,9 +9,16 @@ class Movie extends Model
 {
     protected $fillable = ['name', 'description', 'path', 'rating', 'year', 'poster', 'image', 'percent'];
 
-    protected $appends = ['poster_path','image_path'];
+    protected $appends = ['poster_path','image_path','is_favored'];
 
     //attribute-------------------------------------
+
+    public function getIsFavoredAttribute(){
+        if (auth()->user()) {
+            return (bool)$this->users()->where('user_id', auth()->user()->id)->count();
+        }
+        return false;
+    }
 
     public function getPosterPathAttribute()
     {
@@ -31,4 +38,8 @@ class Movie extends Model
         return $this->belongsToMany(Category::class,'movie_category');
     }
 
+
+    public function users(){
+        return $this->belongsToMany(User::class,'users_movies');
+    }
 }

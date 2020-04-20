@@ -2,7 +2,7 @@
 
     <div class="container">
 
-        <a class="navbar-brand" href="index.html">Netflix<span class="text-primary font-weight-bold">ify</span></a>
+        <a class="navbar-brand" href="/">Netflix<span class="text-primary font-weight-bold">ify</span></a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -25,9 +25,10 @@
                         <a href="" class="nav-link text-white" style="position: relative;">
                             <i class="fa fa-heart"></i>
                             <span class="bg-primary text-white d-flex justify-content-center align-content-center"
-                                style="position: absolute; top: 0; right: -15px; width: 30px; height: 20px; border-radius: 50px"
+                                style="position: absolute; top: 0; right: -15px; width: 30px; height: 20px; border-radius: 50px" id="nav__fav-count"
+                                  data-fav_count="{{auth()->user()->movies_count}}"
                             >
-                                9+
+                                {{auth()->user()->movies_count > 9 ? '9+' : auth()->user()->movies_count}}
                             </span>
                         </a>
                     </li>

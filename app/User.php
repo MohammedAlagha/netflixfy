@@ -39,6 +39,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $withCount = ['movies'];
+
     //attribute------------------------
 
     public function getNameAttribute($value)
@@ -66,4 +68,9 @@ class User extends Authenticatable
     }
 
 
+    //relations--------------------------------------------------------------------------------------------------
+
+    public function movies(){
+        return $this->belongsToMany(Movie::class,'users_movies');
+    }
 }
