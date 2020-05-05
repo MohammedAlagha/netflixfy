@@ -22,12 +22,25 @@
     <!--google font-->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,500,700&display=swap" rel="stylesheet">
 
+    {{--Easy auto complete--}}
+    <link rel="stylesheet" href="{{asset('front_files/plugins/easyautocomplete/easy-autocomplete.min.css')}}">
+
     <!--main styles -->
     <link rel="stylesheet" href="{{asset('front_files/css/main.min.css')}}">
 
     <style>
         .fw-900{
             font-weight: 900;
+        }
+        .easy-autocomplete{
+            width: 90%;
+        }
+        .easy-autocomplete input {
+            color: #FFF !important;
+        }
+        .eac-icon-left .eac-item img {
+            max-height: 70px !important;
+
         }
     </style>
 
@@ -36,6 +49,8 @@
 <body>
 
 @yield('content')
+
+
 
 {{--axios--}}
 <script src="{{asset('front_files/js/axios.min.js')}}"></script>
@@ -56,6 +71,36 @@
 {{--playerjs--}}
 <script src="{{asset('front_files/js/playerjs2.js')}}"></script>
 
+{{--Easy auto complete--}}
+<script src="{{asset('front_files/plugins/easyautocomplete/jquery.easy-autocomplete.min.js')}}"></script>
+
+<script>
+
+    let options = {
+        url: function(search) {
+		    return "/movies?search=" + search  ;
+        },
+        getValue: "name",
+        template:{
+            type:'iconLeft',
+            fields:{
+                iconSrc:"poster_path"
+            }
+        },
+        list: {
+		onChooseEvent: function() {
+            
+            let movie = $('.form-control[type="search"]').getSelectedItemData();
+            let url = window.location.origin + '/movies/ ' + movie.id;
+            window.location.replace(url);
+
+		        }	
+	        }
+        }
+
+    $('.form-control[type="search"]').easyAutocomplete(options);
+</script>
+
 <script>
 
    window.axios.defaults.headers.common = {
@@ -63,6 +108,8 @@
        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
    };
 </script>
+
+
 
 {{-- custom movie--}}
 <script src="{{asset('front_files/js/custom/movie.js')}}"></script>

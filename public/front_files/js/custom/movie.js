@@ -3,12 +3,18 @@ $(document).ready(function () {
     let fav_count = $('#nav__fav-count').data('fav_count');
 
     $(document).on('click','.movie__fav-icon',function (e) {
-        e.preventDefault();
+        // e.preventDefault();
         let url = $(this).data('url');
         let isFavored = $(this).hasClass('fw-900');
         let movieId = $(this).data('movie_id');
 
-        toggleFavorite(url,isFavored,movieId);
+        toggleFavorite(url, isFavored, movieId);
+        
+        if ($('.movie-' + movieId).closest('.favorite').length) {
+            
+            $('.movie-' + movieId).closest('.movie').remove();
+
+        }//end of if
 
     }) //end of event click
 
@@ -26,7 +32,10 @@ $(document).ready(function () {
 
         !isFavored ? fav_count++ : fav_count--;
 
-        fav_count > 9 ? $('#nav__fav-count').html('9+') : $('#nav__fav-count').html(fav_count)
+         fav_count > 9 ? $('#nav__fav-count').html('9+') : $('#nav__fav-count').html(fav_count);
+
+      
+
 
 
         $('.movie-'+movieId).toggleClass('fw-900');

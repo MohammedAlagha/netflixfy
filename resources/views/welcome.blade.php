@@ -73,7 +73,7 @@
                 <div class="row my-4">
                     <div class="col-12 d-flex justify-content-between">
                         <h3 class="listing__title text-white fw-300">{{$category->name}}</h3>
-                        <a href="" class="align-self-center text-capitalize text-primary">see all</a>
+                        <a href="{{route('movies.index',['category_name' => $category->name])}}" class="align-self-center text-capitalize text-primary">see all</a>
                     </div>
                 </div><!-- end of row -->
 

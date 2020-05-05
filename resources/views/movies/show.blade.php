@@ -73,6 +73,7 @@
                                     ></span>
                                 add to favorite
                             </a>
+
                         @else
                         <a href="{{route('login')}}" class="btn btn-primary text-capitalize my-3"><i class="far fa-heart {{$movie->is_favored ? 'fw-900' : ''}}"></i> add to favorites</a>
                         @endauth

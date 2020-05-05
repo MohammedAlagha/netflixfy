@@ -42,4 +42,34 @@ class Movie extends Model
     public function users(){
         return $this->belongsToMany(User::class,'users_movies');
     }
+
+    //scopes----------------------------------
+
+    public function scopeWhenSearch($query,$search){
+        return $query->when($search,function($q) use ($search){
+            return $q->where("name","like","%$search%")
+                    ->orWhere("description","like","%$search%")
+                    ->orWhere("year","like","%$search%")
+                    ->orWhere("rating","like","%$search%");
+        });
+    }
+
+    public function scopeWhenCategory($query,$category)
+    {
+        return $query->when($category, function($q) use ($category) {
+            return $q->whereHas('categories',function($qu) use ($category){
+                return $qu->whereIn('category_id', (array)$category)
+                        ->orWhereIn('name',(array)$category);
+            });
+        });
+    }
+
+    public function scopeWhenFavorite($query,$favorite){
+        return $query->when($favorite,function($qu) use ($favorite){
+            return $qu->whereHas('users',function($q) use ($favorite){
+                return $q->where('user_id',auth()->user()->id);
+            });
+        });
+    }
+
 }

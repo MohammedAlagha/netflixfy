@@ -20,7 +20,7 @@
 
 
     @php
-    $social_sites = ['facebook','google','youtube']
+    $social_sites = ['facebook','twitter','youtube']
     @endphp
 
     @foreach ($social_sites as $social_site)
