@@ -14,8 +14,6 @@ laravel 6 - Bootstrap 4
  - copy files in your local directory
  - rename env.example to .env file and set your db connection data
  - run "composer install"
- - run "npm install" 
- - run "npm run dev"
  - run "php artisan key:generate"
  - run command "php artisan migrate --seed"
  
